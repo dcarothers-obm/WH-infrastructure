@@ -8,66 +8,80 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'DM Sans',sans-serif;background:#0b0f1a;color:#e8e6e1;height:100vh;overflow:hidden}
+  body{font-family:'DM Sans',sans-serif;background:#e8e8e8;color:#1a1a2e;height:100vh;overflow:hidden}
   #map{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1}
 
-  .header-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(11,15,26,0.95) 0%,rgba(11,15,26,0.7) 80%,transparent 100%);padding:20px 28px 36px;pointer-events:none}
-  .header-bar h1{font-family:'Instrument Serif',serif;font-size:26px;font-weight:400;letter-spacing:0.02em;color:#f0ece4}
-  .header-bar .subtitle{font-size:11px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.45);margin-top:4px}
+  .header-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(245,245,245,0.97) 0%,rgba(245,245,245,0.8) 80%,transparent 100%);padding:16px 28px 32px;pointer-events:none}
+  .header-bar h1{font-family:'Instrument Serif',serif;font-size:26px;font-weight:400;letter-spacing:0.02em;color:#1a1a2e}
+  .header-bar .subtitle{font-size:11px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,26,46,0.45);margin-top:4px}
 
-  .layer-panel{position:fixed;top:90px;right:16px;z-index:1000;background:rgba(16,20,32,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 18px;min-width:250px;max-height:calc(100vh - 120px);overflow-y:auto;box-shadow:0 12px 48px rgba(0,0,0,0.5)}
-  .panel-title{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.35);margin-bottom:14px}
-  .layer-item{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;transition:opacity 0.2s;user-select:none}
-  .layer-item:hover{opacity:0.85}
-  .layer-item.disabled{opacity:0.3}
-  .layer-swatch{width:14px;height:14px;border-radius:4px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.1)}
+  .layer-panel{position:fixed;top:86px;right:16px;z-index:1000;background:rgba(255,255,255,0.94);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:16px 18px;min-width:260px;max-height:calc(100vh - 110px);overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,0.1)}
+  .panel-title{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(26,26,46,0.4);margin-bottom:14px}
+  .layer-item{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer;transition:opacity 0.2s;user-select:none}
+  .layer-item:hover{opacity:0.7}
+  .layer-item.disabled{opacity:0.25}
+  .layer-swatch{width:14px;height:14px;border-radius:4px;flex-shrink:0;border:1.5px solid rgba(0,0,0,0.08)}
   .layer-swatch.line-swatch{width:20px;height:4px;border-radius:2px}
   .layer-swatch.circle-swatch{border-radius:50%}
-  .layer-label{font-size:13px;font-weight:400;color:rgba(240,236,228,0.8);flex:1}
-  .layer-count{font-size:11px;font-weight:500;color:rgba(240,236,228,0.3);font-variant-numeric:tabular-nums}
-  .layer-separator{height:1px;background:rgba(255,255,255,0.05);margin:6px 0}
+  .layer-label{font-size:13px;font-weight:500;color:rgba(26,26,46,0.8);flex:1}
+  .layer-count{font-size:11px;font-weight:500;color:rgba(26,26,46,0.35);font-variant-numeric:tabular-nums}
+  .layer-separator{height:1px;background:rgba(0,0,0,0.06);margin:6px 0}
 
-  .legend-toggle{font-size:10px;color:rgba(240,236,228,0.4);cursor:pointer;padding:4px 0;letter-spacing:0.05em;transition:color 0.2s}
-  .legend-toggle:hover{color:rgba(240,236,228,0.7)}
+  .legend-toggle{font-size:10px;color:rgba(26,26,46,0.4);cursor:pointer;padding:4px 0;letter-spacing:0.05em;transition:color 0.2s}
+  .legend-toggle:hover{color:rgba(26,26,46,0.7)}
   .legend-sub{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
   .legend-sub.open{max-height:500px}
   .legend-sub-item{display:flex;align-items:center;gap:8px;padding:3px 0 3px 24px}
   .sub-swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0}
   .sub-swatch.line{width:16px;border-radius:1.5px}
-  .sub-label{font-size:11px;color:rgba(240,236,228,0.5)}
+  .sub-label{font-size:11px;color:rgba(26,26,46,0.5)}
 
-  .leaflet-popup-content-wrapper{background:rgba(16,20,32,0.95)!important;backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08)!important;border-radius:10px!important;color:#e8e6e1!important;box-shadow:0 8px 32px rgba(0,0,0,0.5)!important}
-  .leaflet-popup-tip{background:rgba(16,20,32,0.95)!important}
+  /* Search & Filter */
+  .search-box{margin:8px 0 4px;position:relative}
+  .search-box input{width:100%;padding:7px 10px 7px 30px;border:1px solid rgba(0,0,0,0.1);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;background:rgba(0,0,0,0.03);color:#1a1a2e;outline:none;transition:border-color 0.2s}
+  .search-box input:focus{border-color:rgba(74,158,237,0.5)}
+  .search-box input::placeholder{color:rgba(26,26,46,0.3)}
+  .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(26,26,46,0.3);pointer-events:none}
+
+  .filter-bar{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}
+  .filter-btn{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:0.03em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.03);color:rgba(26,26,46,0.55);transition:all 0.15s;user-select:none;font-family:'DM Sans',sans-serif}
+  .filter-btn:hover{border-color:rgba(0,0,0,0.2)}
+  .filter-btn.active{background:#4a9eed;color:#fff;border-color:#4a9eed}
+  .filter-count{font-size:9px;margin-left:3px;opacity:0.7}
+
+  /* Popups */
+  .leaflet-popup-content-wrapper{background:rgba(255,255,255,0.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.08)!important;border-radius:10px!important;color:#1a1a2e!important;box-shadow:0 4px 20px rgba(0,0,0,0.12)!important}
+  .leaflet-popup-tip{background:rgba(255,255,255,0.97)!important}
   .leaflet-popup-content{margin:12px 14px!important;font-family:'DM Sans',sans-serif!important;font-size:12px!important;line-height:1.6!important;max-height:260px;overflow-y:auto}
-  .popup-title{font-family:'Instrument Serif',serif;font-size:15px;color:#f0ece4;margin-bottom:6px}
+  .popup-title{font-family:'Instrument Serif',serif;font-size:15px;color:#1a1a2e;margin-bottom:6px}
   .popup-row{display:flex;justify-content:space-between;gap:12px;padding:2px 0}
-  .popup-key{color:rgba(240,236,228,0.4);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
-  .popup-val{color:rgba(240,236,228,0.85);font-weight:500;text-align:right;word-break:break-word}
-  .leaflet-popup-close-button{color:rgba(240,236,228,0.4)!important;font-size:18px!important}
+  .popup-key{color:rgba(26,26,46,0.4);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+  .popup-val{color:rgba(26,26,46,0.85);font-weight:500;text-align:right;word-break:break-word}
+  .leaflet-popup-close-button{color:rgba(26,26,46,0.4)!important;font-size:18px!important}
 
   .status-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
-  .status-active{background:rgba(80,200,120,0.2);color:#50c878}
-  .status-plan{background:rgba(120,120,120,0.2);color:#999}
-  .status-inventory{background:rgba(100,149,237,0.2);color:#6495ed}
-  .status-onhold{background:rgba(237,146,55,0.2);color:#ed9237}
-  .status-entitle{background:rgba(180,130,220,0.2);color:#b482dc}
+  .status-active{background:rgba(80,200,120,0.15);color:#2d8f4e}
+  .status-plan{background:rgba(120,120,120,0.12);color:#666}
+  .status-inventory{background:rgba(100,149,237,0.15);color:#3a6fcf}
+  .status-onhold{background:rgba(237,146,55,0.15);color:#c5792a}
+  .status-entitle{background:rgba(150,100,200,0.15);color:#7a4db5}
 
-  .info-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(16,20,32,0.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 20px;font-size:11px;color:rgba(240,236,228,0.4);letter-spacing:0.04em;white-space:nowrap}
+  .info-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,0.9);backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:10px 20px;font-size:11px;color:rgba(26,26,46,0.45);letter-spacing:0.04em;white-space:nowrap}
 
-  .leaflet-control-zoom a{background:rgba(16,20,32,0.9)!important;color:rgba(240,236,228,0.7)!important;border:1px solid rgba(255,255,255,0.08)!important}
-  .leaflet-control-zoom a:hover{background:rgba(30,36,52,0.95)!important;color:#f0ece4!important}
-  .leaflet-control-attribution{background:rgba(16,20,32,0.7)!important;color:rgba(240,236,228,0.3)!important;font-size:10px!important}
-  .leaflet-control-attribution a{color:rgba(240,236,228,0.45)!important}
+  .leaflet-control-zoom a{background:rgba(255,255,255,0.95)!important;color:rgba(26,26,46,0.6)!important;border:1px solid rgba(0,0,0,0.1)!important}
+  .leaflet-control-zoom a:hover{background:#fff!important;color:#1a1a2e!important}
+  .leaflet-control-attribution{background:rgba(255,255,255,0.8)!important;color:rgba(26,26,46,0.35)!important;font-size:10px!important}
+  .leaflet-control-attribution a{color:rgba(26,26,46,0.5)!important}
   .layer-panel::-webkit-scrollbar{width:4px}
   .layer-panel::-webkit-scrollbar-track{background:transparent}
-  .layer-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+  .layer-panel::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.1);border-radius:2px}
 </style>
 </head>
 <body>
 
 <div class="header-bar">
   <h1>West Hollywood Infrastructure</h1>
-  <div class="subtitle">Fiber Conduit &middot; Pull Boxes &middot; Fiber Cabinets &middot; Site Reports</div>
+  <div class="subtitle">Fiber Conduit &middot; Pull Boxes &middot; Fiber Cabinets &middot; Kiosks</div>
 </div>
 
 <div class="layer-panel" id="layerPanel">
@@ -76,7 +90,7 @@
   <div class="layer-item" data-layer="conduit" onclick="toggleLayer('conduit')">
     <div class="layer-swatch line-swatch" style="background:#4a9eed"></div>
     <span class="layer-label">Fiber Conduit</span>
-    <span class="layer-count" id="count-conduit">—</span>
+    <span class="layer-count" id="count-conduit">&mdash;</span>
   </div>
   <div class="legend-toggle" onclick="toggleLegend('cl')">&#9656; Width by Size</div>
   <div class="legend-sub" id="cl">
@@ -92,14 +106,14 @@
   <div class="layer-item" data-layer="pullbox" onclick="toggleLayer('pullbox')">
     <div class="layer-swatch" style="background:#005eb0"></div>
     <span class="layer-label">Pull Boxes</span>
-    <span class="layer-count" id="count-pullbox">—</span>
+    <span class="layer-count" id="count-pullbox">&mdash;</span>
   </div>
   <div class="legend-toggle" onclick="toggleLegend('pl')">&#9656; Legend</div>
   <div class="legend-sub" id="pl">
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(71,191,151)"></div><span class="sub-label">Size 5</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(145,78,217)"></div><span class="sub-label">Size 6</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(242,115,92)"></div><span class="sub-label">Size 6e</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(229,240,86)"></div><span class="sub-label">Number 3</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#47bf97"></div><span class="sub-label">Size 5</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#914ed9"></div><span class="sub-label">Size 6</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#f2735c"></div><span class="sub-label">Size 6e</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#e5f056"></div><span class="sub-label">Number 3</span></div>
   </div>
 
   <div class="layer-separator"></div>
@@ -107,28 +121,44 @@
   <div class="layer-item" data-layer="cabinet" onclick="toggleLayer('cabinet')">
     <div class="layer-swatch circle-swatch" style="background:#2ecc71"></div>
     <span class="layer-label">Fiber Cabinets</span>
-    <span class="layer-count" id="count-cabinet">—</span>
+    <span class="layer-count" id="count-cabinet">&mdash;</span>
   </div>
 
   <div class="layer-separator"></div>
 
   <div class="layer-item" data-layer="sites" onclick="toggleLayer('sites')">
     <div class="layer-swatch" style="background:#ed9237"></div>
-    <span class="layer-label">Site Reports</span>
-    <span class="layer-count" id="count-sites">—</span>
+    <span class="layer-label">Kiosks</span>
+    <span class="layer-count" id="count-sites">&mdash;</span>
   </div>
+
+  <!-- Search -->
+  <div class="search-box">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" id="kioskSearch" placeholder="Search by ID, site, or project..." oninput="applyKioskFilters()" />
+  </div>
+
+  <!-- Filter buttons -->
+  <div class="filter-bar" id="filterBar">
+    <div class="filter-btn active" data-filter="all" onclick="setFilter('all')">All<span class="filter-count" id="fc-all"></span></div>
+    <div class="filter-btn" data-filter="Active" onclick="setFilter('Active')">Active<span class="filter-count" id="fc-Active"></span></div>
+    <div class="filter-btn" data-filter="Plan" onclick="setFilter('Plan')">Plan<span class="filter-count" id="fc-Plan"></span></div>
+    <div class="filter-btn" data-filter="Entitlement" onclick="setFilter('Entitlement')">Entitlement<span class="filter-count" id="fc-Entitlement"></span></div>
+    <div class="filter-btn" data-filter="Inventory" onclick="setFilter('Inventory')">Inventory<span class="filter-count" id="fc-Inventory"></span></div>
+    <div class="filter-btn" data-filter="On Hold" onclick="setFilter('On Hold')">On Hold<span class="filter-count" id="fc-On Hold"></span></div>
+  </div>
+
   <div class="legend-toggle" onclick="toggleLegend('sl')">&#9656; Legend</div>
   <div class="legend-sub" id="sl">
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(80,200,120)"></div><span class="sub-label">Active</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(100,149,237)"></div><span class="sub-label">Inventory</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(180,130,220)"></div><span class="sub-label">Entitlement</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(237,146,55)"></div><span class="sub-label">On Hold</span></div>
-    <div class="legend-sub-item"><div class="sub-swatch" style="background:rgb(120,120,120)"></div><span class="sub-label">Plan</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#50c878"></div><span class="sub-label">Active</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#6495ed"></div><span class="sub-label">Inventory</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#b482dc"></div><span class="sub-label">Entitlement</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#ed9237"></div><span class="sub-label">On Hold</span></div>
+    <div class="legend-sub-item"><div class="sub-swatch" style="background:#787878"></div><span class="sub-label">Plan</span></div>
   </div>
 </div>
 
 <div class="info-bar" id="infoBar">Loading&hellip;</div>
-
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -142,12 +172,13 @@ var SKIP = ['FID','OBJECTID','OBJECTID_1','OBJECTID_1_1','Shape_Length','POINT_X
 
 var map = L.map('map', {center:[34.088,-118.37], zoom:15, zoomControl:true});
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+// Light basemap
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution:'&copy; <a href="https://carto.com/">CARTO</a> &middot; <a href="https://openstreetmap.org">OSM</a>',
   maxZoom:20, subdomains:'abcd'
 }).addTo(map);
 
-function popup(title, props) {
+function mkPopup(title, props) {
   var h = '<div class="popup-title">' + title + '</div>';
   var keys = Object.keys(props);
   for (var i = 0; i < keys.length; i++) {
@@ -156,7 +187,7 @@ function popup(title, props) {
     if (SKIP.indexOf(k) >= 0) continue;
     if (k === 'Project_Status' || k === 'Site_Status') {
       var s = String(v).toLowerCase().replace(/\s+/g, '');
-      var cls = s==='active'?'status-active': s==='inventory'?'status-inventory': s==='onhold'?'status-onhold': s==='entitlement'?'status-entitle':'status-plan';
+      var cls = s==='active'?'status-active':s==='inventory'?'status-inventory':s==='onhold'?'status-onhold':s==='entitlement'?'status-entitle':'status-plan';
       v = '<span class="status-badge ' + cls + '">' + v + '</span>';
     }
     h += '<div class="popup-row"><span class="popup-key">' + k.replace(/_/g,' ') + '</span><span class="popup-val">' + v + '</span></div>';
@@ -164,15 +195,13 @@ function popup(title, props) {
   return h;
 }
 
-// Convert compact data to GeoJSON
 function pointsToGeoJSON(arr) {
-  return {type:'FeatureCollection', features: arr.map(function(f) {
+  return {type:'FeatureCollection', features: arr.map(function(f){
     return {type:'Feature', geometry:{type:'Point',coordinates:f.c}, properties:f.p};
   })};
 }
-
 function linesToGeoJSON(arr) {
-  return {type:'FeatureCollection', features: arr.map(function(f) {
+  return {type:'FeatureCollection', features: arr.map(function(f){
     return {type:'Feature', geometry:{type:'LineString',coordinates:f.c}, properties:f.p};
   })};
 }
@@ -180,49 +209,108 @@ function linesToGeoJSON(arr) {
 var layers = {};
 var vis = {conduit:true, pullbox:true, cabinet:true, sites:true};
 
-// 1. Fiber Conduit (lines with width by Conduit_Si)
+// 1. Fiber Conduit
 layers.conduit = L.geoJSON(linesToGeoJSON(D.conduit), {
   style: function(feature) {
     var baseW = CW[feature.properties.Conduit_Si] || 3;
     return {color:'#4a9eed', weight:baseW, opacity:0.8, lineCap:'round', lineJoin:'round'};
   },
-  onEachFeature: function(feature, layer) {
-    layer.bindPopup(popup('Fiber Conduit', feature.properties));
-  }
+  onEachFeature: function(feature, layer) { layer.bindPopup(mkPopup('Fiber Conduit', feature.properties)); }
 }).addTo(map);
 
 // 2. Pull Boxes
 layers.pullbox = L.geoJSON(pointsToGeoJSON(D.pullbox), {
   pointToLayer: function(feature, latlng) {
     var color = PC[feature.properties.Pullbox_Si] || '#005eb0';
-    return L.circleMarker(latlng, {radius:5, fillColor:color, fillOpacity:0.9, color:'#000', weight:1, opacity:0.6});
+    return L.circleMarker(latlng, {radius:5, fillColor:color, fillOpacity:0.9, color:'#333', weight:1, opacity:0.5});
   },
-  onEachFeature: function(feature, layer) {
-    layer.bindPopup(popup('Pull Box', feature.properties));
-  }
+  onEachFeature: function(feature, layer) { layer.bindPopup(mkPopup('Pull Box', feature.properties)); }
 }).addTo(map);
 
 // 3. Fiber Cabinets
 layers.cabinet = L.geoJSON(pointsToGeoJSON(D.cabinet), {
   pointToLayer: function(feature, latlng) {
-    return L.circleMarker(latlng, {radius:7, fillColor:'#2ecc71', fillOpacity:0.85, color:'#fff', weight:1.5, opacity:0.4});
+    return L.circleMarker(latlng, {radius:7, fillColor:'#2ecc71', fillOpacity:0.85, color:'#fff', weight:1.5, opacity:0.5});
   },
-  onEachFeature: function(feature, layer) {
-    layer.bindPopup(popup('Fiber Cabinet', feature.properties));
-  }
+  onEachFeature: function(feature, layer) { layer.bindPopup(mkPopup('Fiber Cabinet', feature.properties)); }
 }).addTo(map);
 
-// 4. Site Reports
-layers.sites = L.geoJSON(pointsToGeoJSON(D.sites), {
-  pointToLayer: function(feature, latlng) {
-    var st = feature.properties.Project_Status || feature.properties.Site_Status || '';
+// 4. Kiosks (was Site Reports) — managed separately for filtering
+var kioskMarkers = [];
+var activeFilter = 'all';
+
+function createKioskMarkers() {
+  for (var i = 0; i < D.sites.length; i++) {
+    var f = D.sites[i];
+    var st = f.p.Project_Status || f.p.Site_Status || '';
     var color = SC[st] || '#ed9237';
-    return L.circleMarker(latlng, {radius:7, fillColor:color, fillOpacity:0.8, color:'rgba(255,255,255,0.3)', weight:1.5});
-  },
-  onEachFeature: function(feature, layer) {
-    layer.bindPopup(popup('Site Report', feature.properties));
+    var marker = L.circleMarker([f.c[1], f.c[0]], {
+      radius:7, fillColor:color, fillOpacity:0.8, color:'rgba(0,0,0,0.15)', weight:1.5
+    });
+    marker.bindPopup(mkPopup('Kiosk', f.p));
+    marker._kioskData = f.p;
+    marker._kioskStatus = st;
+    kioskMarkers.push(marker);
   }
-}).addTo(map);
+}
+createKioskMarkers();
+
+layers.sites = L.layerGroup();
+kioskMarkers.forEach(function(m) { layers.sites.addLayer(m); });
+layers.sites.addTo(map);
+
+// Filter counts
+function updateFilterCounts() {
+  var counts = {all:0, Active:0, Plan:0, Entitlement:0, Inventory:0, 'On Hold':0};
+  for (var i = 0; i < D.sites.length; i++) {
+    var st = D.sites[i].p.Project_Status || D.sites[i].p.Site_Status || '';
+    counts.all++;
+    if (counts[st] !== undefined) counts[st]++;
+  }
+  for (var key in counts) {
+    var el = document.getElementById('fc-' + key);
+    if (el) el.textContent = ' (' + counts[key] + ')';
+  }
+}
+updateFilterCounts();
+
+function setFilter(f) {
+  activeFilter = f;
+  // Update button states
+  var btns = document.querySelectorAll('.filter-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].getAttribute('data-filter') === f);
+  }
+  applyKioskFilters();
+}
+
+function applyKioskFilters() {
+  var query = (document.getElementById('kioskSearch').value || '').toLowerCase().trim();
+  var shown = 0;
+  layers.sites.clearLayers();
+
+  for (var i = 0; i < kioskMarkers.length; i++) {
+    var m = kioskMarkers[i];
+    var p = m._kioskData;
+    var st = m._kioskStatus;
+
+    // Status filter
+    if (activeFilter !== 'all' && st !== activeFilter) continue;
+
+    // Search filter
+    if (query) {
+      var searchable = [
+        p.Ike_Site__ || '', p.Project_ID || '', p.Project_Status || '',
+        p.Site_Status || '', p.Project_Issue_Reason || '', p.Project_Comments_History || ''
+      ].join(' ').toLowerCase();
+      if (searchable.indexOf(query) === -1) continue;
+    }
+
+    layers.sites.addLayer(m);
+    shown++;
+  }
+  document.getElementById('count-sites').textContent = shown;
+}
 
 // Fit bounds
 var allBounds = L.featureGroup([layers.conduit, layers.pullbox, layers.cabinet, layers.sites]).getBounds();
@@ -237,7 +325,6 @@ document.getElementById('count-sites').textContent = D.sites.length;
 var total = D.conduit.length + D.pullbox.length + D.cabinet.length + D.sites.length;
 document.getElementById('infoBar').innerHTML = total + ' features &middot; Click features for attributes';
 
-// Toggle layers
 function toggleLayer(name) {
   vis[name] = !vis[name];
   var el = document.querySelector('[data-layer="' + name + '"]');
@@ -248,8 +335,9 @@ function toggleLayer(name) {
 function toggleLegend(id) {
   var el = document.getElementById(id);
   var t = el.previousElementSibling;
-  if (el.classList.contains('open')) { el.classList.remove('open'); t.innerHTML = '&#9656; ' + (id==='cl'?'Width by Size':'Legend'); }
-  else { el.classList.add('open'); t.innerHTML = '&#9662; ' + (id==='cl'?'Width by Size':'Legend'); }
+  var label = id==='cl'?'Width by Size':'Legend';
+  if (el.classList.contains('open')) { el.classList.remove('open'); t.innerHTML='&#9656; '+label; }
+  else { el.classList.add('open'); t.innerHTML='&#9662; '+label; }
 }
 </script>
 </body>
